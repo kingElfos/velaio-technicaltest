@@ -13,7 +13,6 @@ tasks: Task[] = [];
   constructor(private taskService: TaskService,private cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
-    
     this.taskService.getTasks().subscribe(tasks => {
       this.tasks = tasks;
       this.cdr.detectChanges();
@@ -21,10 +20,9 @@ tasks: Task[] = [];
   }
 
   filterTasks(event: any) {
-    const status: statusTask | null = event.target.value;
-
-    
+    const status: statusTask | 'all' = event.target.value;
     this.taskService.filterTasks(status).subscribe(filteredTasks => {
+      console.log(filteredTasks)
       this.tasks = filteredTasks;
     });
   }

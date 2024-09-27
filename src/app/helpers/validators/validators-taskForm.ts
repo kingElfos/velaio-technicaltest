@@ -11,6 +11,7 @@ export const atLeastOneSkill=(control: AbstractControl):ValidationCustom=> {
     return null; 
 }
 
+
   // validation names duplicated
 export const noDuplicateNames=(control: AbstractControl):ValidationCustom=> {
     const peopleArray = control as FormArray;

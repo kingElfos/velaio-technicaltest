@@ -1,7 +1,7 @@
 <div class="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
   <h2 class="text-2xl font-bold mb-4 text-center">Crear Nueva Tarea</h2>
 
-  <form [formGroup]="taskForm" (ngSubmit)="onSubmit()">
+  <form [formGroup]="taskForm" (ngSubmit)="taskActions.onSubmit()">
     <!-- Nombre de la Tarea -->
     <div class="mb-4">
       <label for="taskName" class="block text-sm font-medium text-gray-700">Nombre de la Tarea</label>
@@ -40,7 +40,7 @@
             <div *ngFor="let skill of getSkills(i).controls; let j = index" class="flex items-center">
               <!-- Chip de Habilidad -->
               <span class="bg-gray-200 text-gray-700 px-3 py-1 rounded-full">{{ skill.value }}</span>
-              <button type="button" (click)="removeSkill(i, j)" class="ml-2 text-red-500">&times;</button>
+              <button type="button" (click)="taskActions.removeSkill(i, j)" class="ml-2 text-red-500">&times;</button>
             </div>
           </div>
           <div *ngIf="getSkills(i).errors?.['atLeastOneSkill']">
@@ -48,13 +48,13 @@
           </div>
 
           <!-- Botón para añadir Habilidad -->
-          <button type="button" (click)="addSkill(i)" 
+          <button type="button" (click)="taskActions.addSkill(i)" 
                   class="mt-2 mx-2 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
             Añadir Habilidad
           </button>
 
           <!-- Botón para eliminar Persona -->
-          <button type="button" (click)="removePerson(i)" 
+          <button type="button" (click)="taskActions.removePerson(i)" 
                   class="mt-2 mx-2 bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600">
             Eliminar Persona
           </button>
@@ -62,7 +62,7 @@
       </div>
 
       <!-- Botón para añadir Persona -->
-      <button type="button" (click)="addPerson()" 
+      <button type="button" (click)="taskActions.addPerson()" 
               class="mt-4 bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600">
         Añadir Persona
       </button>
