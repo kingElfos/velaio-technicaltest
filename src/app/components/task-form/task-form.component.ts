@@ -1,9 +1,12 @@
-import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
-
+import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 @Component({
+  standalone:true,
   selector: 'app-task-form',
   templateUrl: './task-form.component.html',
+  imports:[CommonModule,ReactiveFormsModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TaskFormComponent {
   taskForm: FormGroup;
