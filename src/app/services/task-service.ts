@@ -22,7 +22,7 @@ export class TaskService {
   
   markTaskAsCompleted(id: string) {
     const updatedTasks = this.tasksSubject.getValue().map(task =>
-      task.id === id ? { ...task, completed: true } : task
+      task.id === id ? { ...task, completed: !task.completed } : task
     );
     this.tasksSubject.next(updatedTasks);
   }
