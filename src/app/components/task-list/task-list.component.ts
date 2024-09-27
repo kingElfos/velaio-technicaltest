@@ -1,7 +1,6 @@
 import { Component, ChangeDetectionStrategy,ChangeDetectorRef } from '@angular/core';
 import { TaskService } from '../../services/task-service';
 import { Task,statusTask} from '../../models/task-model';
-
 @Component({
   selector: 'app-task-list',
   templateUrl: './task-list.component.html',
@@ -13,6 +12,10 @@ tasks: Task[] = [];
   constructor(private taskService: TaskService,private cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
+    
+
+    
+
     this.taskService.getTasks().subscribe(tasks => {
       this.tasks = tasks;
       this.cdr.detectChanges();

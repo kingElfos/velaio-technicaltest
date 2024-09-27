@@ -7,6 +7,7 @@ export interface Task {
   completed: boolean;
 }
 
+
 export interface Person {
   name: string;
   age: number;

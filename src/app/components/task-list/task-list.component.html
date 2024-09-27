@@ -15,7 +15,7 @@
     <li *ngFor="let task of tasks" class="bg-gray-100 p-4 rounded-md shadow-sm">
       <div class="flex justify-between items-center">
         <div>
-          <h3 class="text-lg font-semibold">{{ task.name }}</h3>
+          <h3 class="text-normal font-semibold">{{ task.name }}</h3>
           <p class="text-sm text-gray-600">Fecha Límite: {{ task.dueDate | date }}</p>
           <p class="text-sm text-gray-600">Estado: {{ task.completed ? 'COMPLETADA':'PENDIENTE' }}</p>
         </div>
