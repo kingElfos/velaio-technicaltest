@@ -1,0 +1,32 @@
+<div class="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
+  <h2 class="text-2xl font-bold mb-4 text-center">Crear Nueva Tarea</h2>
+  
+  <form (ngSubmit)="onSubmit()" #taskForm="ngForm">
+    <div class="mb-4">
+      <label for="taskName" class="block text-sm font-medium text-gray-700">Nombre de la Tarea</label>
+      <input type="text" id="taskName" name="taskName" required [(ngModel)]="taskName" 
+             class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-500" />
+    </div>
+
+    <div class="mb-4">
+      <label for="dueDate" class="block text-sm font-medium text-gray-700">Fecha Límite</label>
+      <input type="date" id="dueDate" name="dueDate" required [(ngModel)]="dueDate" 
+             class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-500" />
+    </div>
+
+    <div class="mb-4">
+      <label class="block text-sm font-medium text-gray-700">Personas Asociadas</label>
+      <div *ngFor="let person of people; let i = index" class="flex items-center justify-between mt-2">
+        <input type="text" [(ngModel)]="person.name" placeholder="Nombre" 
+               class="block w-3/4 p-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-500" />
+        <button type="button" (click)="removePerson(i)" 
+                class="ml-2 bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600">Eliminar</button>
+      </div>
+      <button type="button" (click)="addPerson()" 
+              class="mt-2 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">Añadir Persona</button>
+    </div>
+
+    <button type="submit" 
+            class="w-full bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600">Crear Tarea</button>
+  </form>
+</div>
