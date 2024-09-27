@@ -1,17 +1,21 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormArray,AbstractControl } from '@angular/forms';
+import {TaskService} from '../../services/task-service';
 import { CommonModule } from '@angular/common';
+import Swal from 'sweetalert2';
+
 @Component({
   standalone:true,
   selector: 'app-task-form',
   templateUrl: './task-form.component.html',
   imports:[CommonModule,ReactiveFormsModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers:[TaskService]
 })
 export class TaskFormComponent {
    taskForm: FormGroup;
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder,private cdr: ChangeDetectorRef, private taskService:TaskService) {
     this.taskForm = this.fb.group({
       name: ['', [Validators.required]],
       dueDate: ['', [Validators.required]],
@@ -27,7 +31,7 @@ export class TaskFormComponent {
     const person = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(5)]],
       age: ['', [Validators.required, Validators.min(18)]],
-      skills: this.fb.array([], this.atLeastOneSkill) // Validación personalizada para que haya al menos una habilidad
+      skills: this.fb.array([], this.atLeastOneSkill)
     });
     this.people.push(person);
   }
@@ -37,9 +41,28 @@ export class TaskFormComponent {
   }
 
   addSkill(personIndex: number) {
-    const skills = this.getSkills(personIndex);
-    skills.push(this.fb.control('', Validators.required));
-  }
+  const skills = this.getSkills(personIndex);
+
+  Swal.fire({
+    title: 'Añadir Habilidad',
+    input: 'text',
+    inputLabel: 'Nombre de la habilidad',
+    inputPlaceholder: 'Escribe la habilidad',
+    showCancelButton: true,
+    confirmButtonText: 'Agregar',
+    cancelButtonText: 'Cancelar',
+    preConfirm: (value) => {
+      if (!value) {
+        Swal.showValidationMessage('¡Por favor ingresa una habilidad!');
+      }
+    }
+  }).then((result) => {
+    if (result.isConfirmed) {
+      skills.push(this.fb.control(result.value, Validators.required));
+      this.cdr.detectChanges();
+    }
+  });
+}
 
   removePerson(index: number) {
     this.people.removeAt(index);
@@ -65,16 +88,26 @@ export class TaskFormComponent {
     const names = peopleArray.controls.map(person => person.get('name')?.value);
     const duplicates = names.filter((name, index) => names.indexOf(name) !== index);
     if (duplicates.length > 0) {
-      return { 'duplicateNames': true }; // Error si hay nombres duplicados
+      return { 'duplicateNames': true }; 
     }
-    return null; // Sin errores
+    return null; 
   }
 
   onSubmit() {
     if (this.taskForm.valid) {
-      console.log('Formulario válido:', this.taskForm.value);
+      const task=this.taskForm.value;
+      this.taskService.addTask(task);
+      Swal.fire({
+          icon: 'success',
+          title: 'Tarea Agregada',
+          text: 'La tarea se ha agregado correctamente.',
+        });
     } else {
-      console.log('Formulario inválido');
+       Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Hubo un problema al agregar la tarea. Inténtalo de nuevo.',
+        });
     }
   }
 }
