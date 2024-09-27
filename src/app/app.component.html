@@ -1,5 +1,7 @@
-<app-header/>
 
-<div class="container mx-auto mt-4">
-  <router-outlet/>
+<app-header></app-header>
+
+<div class="flex flex-wrap justify-between gap-4 p-4">
+  <app-task-form class="w-full md:w-5/12 bg-white shadow-md rounded-lg p-3"></app-task-form>
+  <app-task-list class="w-full md:w-5/12 bg-white shadow-md rounded-lg p-3"></app-task-list>
 </div>

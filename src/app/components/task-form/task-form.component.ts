@@ -1,23 +1,20 @@
 import { Component, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormArray,AbstractControl } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormArray,AbstractControl } from '@angular/forms';
 import {TaskService} from '../../services/task-service';
-import { CommonModule } from '@angular/common';
 import {atLeastOneSkill, noDuplicateNames} from '../../helpers/validators/validators-taskForm';
 import Swal from 'sweetalert2';
 
 @Component({
-  standalone:true,
   selector: 'app-task-form',
   templateUrl: './task-form.component.html',
-  imports:[CommonModule,ReactiveFormsModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers:[TaskService]
 })
 export class TaskFormComponent {
    taskForm: FormGroup;
 
   constructor(private fb: FormBuilder,private cdr: ChangeDetectorRef, private taskService:TaskService) {
     this.taskForm = this.fb.group({
+      id:[crypto.randomUUID()],
       name: ['', [Validators.required]],
       dueDate: ['', [Validators.required]],
       people: this.fb.array([], noDuplicateNames)
@@ -77,20 +74,43 @@ export class TaskFormComponent {
   
 
   onSubmit() {
-    if (this.taskForm.valid) {
-      const task=this.taskForm.value;
-      this.taskService.addTask(task);
-      Swal.fire({
-          icon: 'success',
-          title: 'Tarea Agregada',
-          text: 'La tarea se ha agregado correctamente.',
-        });
-    } else {
-       Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'Hubo un problema al agregar la tarea. Inténtalo de nuevo.',
-        });
+  if (this.taskForm.valid) {
+    const task = this.taskForm.value;
+    
+    // Llama al servicio para agregar la tarea
+    this.taskService.addTask(task);
+
+    // Reinicia el formulario manualmente
+    this.taskForm.reset();
+    
+    // Limpia los controles dinámicos de 'people' y 'skills'
+    const peopleArray = this.taskForm.get('people') as FormArray;
+    while (peopleArray.length) {
+      peopleArray.removeAt(0);
     }
+
+    // Vuelve a configurar el formulario a su estado inicial si es necesario
+    this.taskForm.markAsPristine();
+    this.taskForm.markAsUntouched();
+
+    // Actualiza el estado del formulario
+    this.taskForm.updateValueAndValidity();
+
+    Swal.fire({
+      icon: 'success',
+      title: 'Tarea Agregada',
+      text: 'La tarea se ha agregado correctamente.',
+    });
+  } else {
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'Hubo un problema al agregar la tarea. Inténtalo de nuevo.',
+    });
   }
+}
+
+
+
+
 }

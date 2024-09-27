@@ -1,25 +1,35 @@
-import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy,ChangeDetectorRef } from '@angular/core';
 import { TaskService } from '../../services/task-service';
-import { CommonModule } from '@angular/common';
-import { Task } from '../../models/task-model';
+import { Task,statusTask} from '../../models/task-model';
 
 @Component({
-  standalone:true,
   selector: 'app-task-list',
   templateUrl: './task-list.component.html',
-  imports:[CommonModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TaskListComponent implements OnInit {
-  tasks: Task[] = [];
+export class TaskListComponent {
+tasks: Task[] = [];
 
-  constructor(private taskService: TaskService) {}
+  constructor(private taskService: TaskService,private cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
-    this.tasks = this.taskService.getTasks();
+    
+    this.taskService.getTasks().subscribe(tasks => {
+      this.tasks = tasks;
+      this.cdr.detectChanges();
+    });
   }
 
-  filterTasks(status: 'completed' | 'pending') {
-    this.tasks = this.taskService.filterTasks(status);
+  filterTasks(event: any) {
+    const status: statusTask | null = event.target.value;
+
+    
+    this.taskService.filterTasks(status).subscribe(filteredTasks => {
+      this.tasks = filteredTasks;
+    });
+  }
+
+  toggleTaskStatus(taskId: string) {
+    this.taskService.markTaskAsCompleted(taskId);
   }
 }

@@ -1,6 +1,6 @@
 
 export interface Task {
-  id: number;
+  id: string;
   name: string;
   dueDate: Date;
   people: Person[];
@@ -12,3 +12,5 @@ export interface Person {
   age: number;
   skills: string[];
 }
+
+export type statusTask= 'completed' | 'pending'
