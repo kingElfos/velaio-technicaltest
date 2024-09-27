@@ -2,6 +2,7 @@ import { Component, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormArray,AbstractControl } from '@angular/forms';
 import {TaskService} from '../../services/task-service';
 import { CommonModule } from '@angular/common';
+import {atLeastOneSkill, noDuplicateNames} from '../../helpers/validators/validators-taskForm';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -19,7 +20,7 @@ export class TaskFormComponent {
     this.taskForm = this.fb.group({
       name: ['', [Validators.required]],
       dueDate: ['', [Validators.required]],
-      people: this.fb.array([], this.noDuplicateNames)
+      people: this.fb.array([], noDuplicateNames)
     });
   }
 
@@ -31,7 +32,7 @@ export class TaskFormComponent {
     const person = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(5)]],
       age: ['', [Validators.required, Validators.min(18)]],
-      skills: this.fb.array([], this.atLeastOneSkill)
+      skills: this.fb.array([], atLeastOneSkill)
     });
     this.people.push(person);
   }
@@ -73,25 +74,7 @@ export class TaskFormComponent {
     skills.removeAt(skillIndex);
   }
 
-  // Validation skills length> o
-  atLeastOneSkill(control: AbstractControl): { [key: string]: boolean } | null {
-    const skillsArray = control as FormArray;
-    if (skillsArray.length === 0) {
-      return { 'atLeastOneSkill': true }; 
-    }
-    return null; 
-  }
-
-  // validation names duplicated
-  noDuplicateNames(control: AbstractControl): { [key: string]: boolean } | null {
-    const peopleArray = control as FormArray;
-    const names = peopleArray.controls.map(person => person.get('name')?.value);
-    const duplicates = names.filter((name, index) => names.indexOf(name) !== index);
-    if (duplicates.length > 0) {
-      return { 'duplicateNames': true }; 
-    }
-    return null; 
-  }
+  
 
   onSubmit() {
     if (this.taskForm.valid) {
