@@ -1,36 +1,76 @@
-
-<h1>task form loaded</h1>
-
-<!-- <div class="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
+<div class="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
   <h2 class="text-2xl font-bold mb-4 text-center">Crear Nueva Tarea</h2>
-  
-  <form (ngSubmit)="onSubmit()" #taskForm="ngForm">
+
+  <form [formGroup]="taskForm" (ngSubmit)="onSubmit()">
+    <!-- Nombre de la Tarea -->
     <div class="mb-4">
       <label for="taskName" class="block text-sm font-medium text-gray-700">Nombre de la Tarea</label>
-      <input type="text" id="taskName" name="taskName" required [(ngModel)]="taskName" 
+      <input type="text" id="taskName" formControlName="name" required 
              class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-500" />
     </div>
 
+    <!-- Fecha Límite -->
     <div class="mb-4">
       <label for="dueDate" class="block text-sm font-medium text-gray-700">Fecha Límite</label>
-      <input type="date" id="dueDate" name="dueDate" required [(ngModel)]="dueDate" 
+      <input type="date" id="dueDate" formControlName="dueDate" required 
              class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-500" />
     </div>
 
+    <!-- Personas Asociadas -->
     <div class="mb-4">
       <label class="block text-sm font-medium text-gray-700">Personas Asociadas</label>
-      <div *ngFor="let person of people; let i = index" class="flex items-center justify-between mt-2">
-        <input type="text" [(ngModel)]="person.name" placeholder="Nombre" 
-               class="block w-3/4 p-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-500" />
-        <button type="button" (click)="removePerson(i)" 
-                class="ml-2 bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600">Eliminar</button>
+      <div formArrayName="people">
+        <div *ngFor="let person of people.controls; let i = index" [formGroupName]="i" class="mt-4">
+          <!-- Nombre de la Persona -->
+          <input type="text" formControlName="name" placeholder="Nombre" 
+                 class="block w-3/4 p-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-500" />
+          <div *ngIf="person.get('name')?.errors?.['required']">
+            <small class="text-red-500">El nombre es requerido</small>
+          </div>
+          <div *ngIf="people.errors?.['duplicateNames']">
+            <small class="text-red-500">El nombre de la persona ya existe</small>
+          </div>
+
+          <!-- Edad de la Persona -->
+          <input type="number" formControlName="age" placeholder="Edad" 
+                 class="mt-1 block w-3/4 p-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-500" />
+
+          <!-- Habilidades de la Persona -->
+          <div formArrayName="skills" class="mt-2 flex flex-wrap gap-2">
+            <div *ngFor="let skill of getSkills(i).controls; let j = index" class="flex items-center">
+              <!-- Chip de Habilidad -->
+              <span class="bg-gray-200 text-gray-700 px-3 py-1 rounded-full">{{ skill.value }}</span>
+              <button type="button" (click)="removeSkill(i, j)" class="ml-2 text-red-500">&times;</button>
+            </div>
+          </div>
+          <div *ngIf="getSkills(i).errors?.['atLeastOneSkill']">
+            <small class="text-red-500">Debe haber al menos una habilidad</small>
+          </div>
+
+          <!-- Botón para añadir Habilidad -->
+          <button type="button" (click)="addSkill(i)" 
+                  class="mt-2 mx-2 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
+            Añadir Habilidad
+          </button>
+
+          <!-- Botón para eliminar Persona -->
+          <button type="button" (click)="removePerson(i)" 
+                  class="mt-2 mx-2 bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600">
+            Eliminar Persona
+          </button>
+        </div>
       </div>
+
+      <!-- Botón para añadir Persona -->
       <button type="button" (click)="addPerson()" 
-              class="mt-2 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">Añadir Persona</button>
+              class="mt-4 bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600">
+        Añadir Persona
+      </button>
     </div>
 
-    <button type="submit" 
-            class="w-full bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600">Crear Tarea</button>
+    <!-- Botón para crear tarea -->
+    <button [disabled]="taskForm.invalid" type="submit" class="w-full bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600">
+      Crear Tarea
+    </button>
   </form>
 </div>
- -->
