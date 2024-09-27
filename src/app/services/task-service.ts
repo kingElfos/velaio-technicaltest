@@ -13,7 +13,7 @@ export class TaskService {
     this.fakeTasksService.getTasksWithRandomPeople().subscribe((tasks)=>this.tasksSubject.next(tasks.slice(0,11)))
   }
   addTask(task: Task) {
-    this.tasksSubject.next([...this.tasksSubject.getValue(), task]);
+    this.tasksSubject.next([task, ...this.tasksSubject.getValue()]);
   }
 
 

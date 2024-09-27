@@ -9,17 +9,18 @@ import {FakeTasksService} from './services/fake-tasks.service';
 import { ReactiveFormsModule } from '@angular/forms';
 import {TaskFormComponent} from './components/task-form/task-form.component';
 import {TaskListComponent} from './components/task-list/task-list.component';
-
+import {ScrollListComponent} from './components/task-list/scroll-list/scroll-list.component';
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
     TaskFormComponent,
-    TaskListComponent
+    TaskListComponent,
   ],
   imports: [
     BrowserModule,
     CommonModule,
+    ScrollListComponent,
     ReactiveFormsModule,
     HttpClientModule
   ],

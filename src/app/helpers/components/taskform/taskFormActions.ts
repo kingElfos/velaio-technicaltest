@@ -1,5 +1,5 @@
 import { Component, ChangeDetectorRef } from '@angular/core';
-import { FormBuilder, FormGroup, Validators,FormArray } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { TaskService } from '../../../services/task-service';
 import { atLeastOneSkill } from '../../validators/validators-taskForm';
 import Swal from 'sweetalert2';
@@ -71,23 +71,16 @@ export class TaskFormActions {
 
 
   onSubmit() {
-    if (this.taskForm.valid) {
+    const isvalid = this.taskForm.valid
+    if (isvalid) {
       const task = this.taskForm.value;
-
       this.taskService.addTask(task);
-
-      this.taskForm.reset();
-
-      const peopleArray = this.taskForm.get('people') as FormArray;
-      while (peopleArray.length) {
-        peopleArray.removeAt(0);
-      }
-
-
-      this.taskForm.markAsPristine();
-      this.taskForm.markAsUntouched();
-      this.taskForm.updateValueAndValidity();
-
+      this.reset();
+    }
+    this.handleMessage(isvalid);
+  }
+  handleMessage(isvalid: boolean) {
+    if (isvalid) {
       Swal.fire({
         icon: 'success',
         title: 'Tarea Agregada',
@@ -100,6 +93,20 @@ export class TaskFormActions {
         text: 'Hubo un problema al agregar la tarea. Inténtalo de nuevo.',
       });
     }
+  }
+
+  reset() {
+    this.taskForm.reset();
+
+    const peopleArray = this.taskForm.get('people') as FormArray;
+    while (peopleArray.length) {
+      peopleArray.removeAt(0);
+    }
+
+
+    this.taskForm.markAsPristine();
+    this.taskForm.markAsUntouched();
+    this.taskForm.updateValueAndValidity();
   }
 
 }
